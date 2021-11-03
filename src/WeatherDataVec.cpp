@@ -2,7 +2,7 @@
 
 //Constructor for input of std::vector<std::string>
 WeatherDataVec::WeatherDataVec(std::vector<std::string> data_strings){
-	std::vector<WeatherDataLine> v;
+    std::vector<WeatherDataLine> v;
     for (std::string m : data_strings){
         v.push_back(WeatherDataLine {m});
     }
@@ -86,26 +86,26 @@ std::vector<double> WeatherDataVec::list_temperatures(){
 
 //averages by day
 WeatherDataVec WeatherDataVec::avg_by_day(){
-	std::string current_date = data[0].to_str();
-	WeatherDataLine line(data[0].get_year(), data[0].get_month(), data[0].get_day(), data[0].get_temp());
-	std::vector<WeatherDataLine> avgdata;
-	std::vector<double> temps;
-	for(auto w : data){
-		if(w.to_str() == current_date){
-			line.date[0] = w.get_year();
-			line.date[1] = w.get_month();
-			line.date[2] = w.get_day();
-			temps.push_back(w.get_temp());
-		} else {
-			double avg_temp = std::accumulate(temps.begin(), temps.end(), 0.0)/temps.size();
-			line.temperature = avg_temp;
-			avgdata.push_back(line);
-			current_date = w.to_str();
-			temps.clear();
-			temps.push_back(w.get_temp());
-		}
-	}
-	return WeatherDataVec{avgdata};
+    std::string current_date = data[0].to_str();
+    WeatherDataLine line(data[0].get_year(), data[0].get_month(), data[0].get_day(), data[0].get_temp());
+    std::vector<WeatherDataLine> avgdata;
+    std::vector<double> temps;
+    for(auto w : data){
+        if(w.to_str() == current_date){
+            line.date[0] = w.get_year();
+            line.date[1] = w.get_month();
+            line.date[2] = w.get_day();
+            temps.push_back(w.get_temp());
+        } else {
+            double avg_temp = std::accumulate(temps.begin(), temps.end(), 0.0)/temps.size();
+            line.temperature = avg_temp;
+            avgdata.push_back(line);
+            current_date = w.to_str();
+            temps.clear();
+            temps.push_back(w.get_temp());
+        }
+    }
+    return WeatherDataVec{avgdata};
 }
 
 //Provides conventional indexing
@@ -156,6 +156,10 @@ WeatherDataVec WeatherDataVec::get_between(int year1, int month1, int day1, int 
     return get_between(datedata_tostr(year1,month1,day1),datedata_tostr(year2,month2,day2));
 }
 
+WeatherDataVec WeatherDataVec::get_between(Gregorian stdate, Gregorian eddate){
+    return get_between(stdate.get_year(), stdate.get_month(), stdate.get_day(), eddate.get_year(), eddate.get_month(), eddate.get_day());
+}
+
 WeatherDataVec WeatherDataVec::get_after(std::string datestr){
     std::vector<WeatherDataLine> v;
     Gregorian gdatestr{datestr};
@@ -171,6 +175,10 @@ WeatherDataVec WeatherDataVec::get_after(int year, int month, int day){
     return get_after(datedata_tostr(year,month,day));
 }
 
+WeatherDataVec WeatherDataVec::get_after(Gregorian inpdate){
+    return get_after(inpdate.get_year(), inpdate.get_month(), inpdate.get_day());
+}
+
 WeatherDataVec WeatherDataVec::get_before(std::string datestr){
     std::vector<WeatherDataLine> v;
     Gregorian gdatestr{datestr};
@@ -184,6 +192,10 @@ WeatherDataVec WeatherDataVec::get_before(std::string datestr){
 
 WeatherDataVec WeatherDataVec::get_before(int year, int month, int day){
     return get_before(datedata_tostr(year,month,day));
+}
+
+WeatherDataVec WeatherDataVec::get_before(Gregorian inpdate){
+    return get_before(inpdate.get_year(), inpdate.get_month(), inpdate.get_day());
 }
 
 
