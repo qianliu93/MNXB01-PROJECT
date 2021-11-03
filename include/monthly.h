@@ -26,12 +26,11 @@
 class Analyse_Monthly {
 	private:
 	Int_t _month;
-	std::string _filename;
-	void Month_tree() const; //TTree building
+	WeatherDataVec _Wdata;
 	public:
 	Analyse_Monthly(Int_t month, std::string filename);
-	void Temp_PerMonth() const; //plot the histo of the average temperature of the month
-	void Month_Extreme() const; //plot the extreme temperatures & average temperature of the month each year
+	void Temp_PerMonth(); //plot the histo of the average temperature of the month
+	void Month_Extreme(); //plot the extreme temperatures & average temperature of the month each year
 };
 
 

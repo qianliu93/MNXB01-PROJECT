@@ -4,69 +4,6 @@ Analyse_Corona::Analyse_Corona(std::string city, std::string filename): _city{ci
 	Plot_Corona();//plot the figure of the relation between the temperature and number of people infected with the COVID-19 when a new object is created.
 }
 
-/*
-tuple<int, int, int> Analyse_Corona::dateCalculation(int year, int month, int date, int period) const{
-	date = date + period; // period is day, from 0 to any positive integer
-	int count =1; // initialize the condition counter: count
-	while(count !=0){ 
-		count =0; // clear the condition counter
-
-		// check if the day is exceeded maximum days the currect month owns
-		// minus the maximum days(28/29/30/31) if the day is exceeded, if so, do month++ and count++
-		// the count++ is in case of the period > one month, so the while loop will run continuously till all of the following conditions do not be staisfied any more, which means the new date is "legal" and can be returned.
-		if (date>31 && ( month==1 || month==3 || month==5 || month==7 || month==8 || month==10 || month==12 ) ){
-			date = date - 31;
-			month++;
-			count++;
-		}
-		else if (date>30 &&  ( month== 4 || month==6 || month==9 || month==11 ) ){
-			date = date - 30;
-			month++;
-			count++;
-		}
-		else if (date>28 && month ==2 && (year%4 !=0)){
-			// for the Feb of a common year
-			date = date - 28;
-			month++;
-			count++;
-		}
-		else if (date>29 && month ==2 && (year%4 ==0)){
-			// for the Feb of a leap year
-			date = date - 29;
-			month++;
-			count++;
-		}
-
-		// if the month > 12 after the above calculations, year will be +1 and month = 1
-		if (month > 12){
-			month = 1;
-			year++;
-		}
-	}
-
-	return make_tuple(year, month, date);
-}
-*/
-
-/*
-Double_t Analyse_Corona::meanOfPeriod (WeatherDataVec data, int frYear, int frMonth, int frDate, int period) const{
-// return the mean temperature between the date frYear.frMonth.frDate to the date (frYear.frMonth.frDate)+period
-	Double_t sum = 0.0;
-	Int_t count = 0; // the number of temperature data
-	while(period != 0){
-		WeatherDataVec _data = data.get_by_year(frYear).get_by_month(frMonth).get_by_day(frDate);
-		for(unsigned i = 0; i < _data.data.size(); i++){
-			// get temperature for one day
-			sum = sum + _data.data[i].get_temp(); // sum the temperature data
-			count++;
-		}
-		tie(frYear, frMonth, frDate) = dateCalculation(frYear, frMonth, frDate, 1);	// detemine the date for the next day
-		period--; // count days
-	}
-	std::cout << sum/count << std::endl;
-	return sum/count;
-}
-*/
 
 void Analyse_Corona::Plot_Corona() const{
 	std::string fname = "../datasets/Covid Data/Covid_" + _city + ".csv";
@@ -100,28 +37,6 @@ void Analyse_Corona::Plot_Corona() const{
         }
     }
 
-/*
-	while(std::getline(file, fileline)) {
-		std::istringstream filesteam(fileline);
-		std::getline(filesteam, yearstring,',');
-		std::istringstream ss1(yearstring);
-		ss1 >> year;
-		std::getline(filesteam, weekstring, ',');
-		std::istringstream ss2(weekstring);
-		ss2 >> week;
-		std::getline(filesteam, city, ',');
-		std::getline(filesteam, numberstring, ',');
-		std::istringstream ss3(numberstring);
-		ss3 >> number;
-		if( (year == 2020 && week >= 9) || (year == 2021 && week <=13) ) {
-			veck1[i1] = i1;
-			veck2[i1] = i2;
-			antal[i1] = number;
-			i1++;
-			i2 = i2 + 1.0;
-		}
-	}
-*/
 
 	WeatherDataVec Wdata {"../datasets/" + _filename};
     std::cout << "Loaded data (with " << Wdata.data.size() << " entries)." << std::endl;
@@ -135,7 +50,6 @@ void Analyse_Corona::Plot_Corona() const{
 	int toMonth = 4;
 	int toDay = 4;
 	int _i = 0; // counter
-	std::cout << "\nYY.MM.DD -- Degree Celsius" << std::endl;
 
 	// equivalent to old code: this has been checked. ("my kind request" - DF) - CF
     // load data between the begining date and end date
@@ -154,19 +68,6 @@ void Analyse_Corona::Plot_Corona() const{
 	for(int i = 0 ; i < tempvec.size(); i++){
 		temp[i] = tempvec[i];
 	}
-
-
-/*	
-	// determine weekly mean temperature from the date frYear.frMonth.frDate to the date toYear.toMonth.toDate
-	while (!(frYear >= toYear && frMonth >= toMonth && frDate >= toDate)){
-		//do the following if the current date is not beyond the target date
-		std::cout << frYear << "." << frMonth<< "." << frDate << " -- ";
-		temp[_i] = meanOfPeriod(Wdata, frYear, frMonth, frDate, 7); // mean temperature for one week(7days)
-		tie(frYear, frMonth, frDate) = dateCalculation(frYear, frMonth, frDate, 7); // determine the next date and assign to current
-		_i++;
-	}
-*/
-
 
 	TCanvas *c3 = new TCanvas("c3","Temperature & Corona",200,10,1200,600);
 	TGraph* g1 = new TGraph(58, veck1, antal); // figure of the number of infected people

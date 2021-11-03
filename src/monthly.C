@@ -1,75 +1,23 @@
 #include "monthly.h"
 
-Analyse_Monthly::Analyse_Monthly(Int_t month, std::string filename): _month{month}, _filename{filename}{
-	Month_tree();
-}
+Analyse_Monthly::Analyse_Monthly(Int_t month, std::string filename): _month{month},  _Wdata{("../datasets/" + filename)} {}
 
+void Analyse_Monthly::Temp_PerMonth(){	
 
-void Analyse_Monthly::Month_tree() const{
-	// Create the outfile and data structure
-	TFile* file = new TFile("monthdata.root", "RECREATE");
-	TTree* tree = new TTree("tree", "Output tree");
-	Year* byyear = new Year();
-	tree->Branch("byyear", &byyear);
-	TClonesArray* dataArray = new TClonesArray("TempData", 1000);
-	tree->Branch("data", "TClonesArray", &dataArray);
+	WeatherDataVec Monthly = _Wdata.get_by_month(_month); // all data of _month from the file with all of the years
+
+	std::vector<int> year = Monthly.list_years(); // list of the years
 	
-	std::string name1 = "../datasets/";
-	std::string name2 = _filename;
-	std::string filename = name1 + name2;
-	WeatherDataVec Wdata {(filename)}; // 
-	WeatherDataVec datamonth = Wdata.get_by_month(_month); // 
-	std::vector<Int_t> list_years = datamonth.list_years();
+	TH1D* h1 = new TH1D("h1", "Monthly temperatures distribution; Celsius; Counts", 150, -20, 30);// histogram that will store the monthly average temperatures data
 
-	// for loop to set the member variables of byyear and TD
-	for(Int_t n = 0; n < (Int_t) list_years.size() ; n++){
-		byyear->year = list_years[n];
-
-		WeatherDataVec _data = datamonth.get_by_year(byyear->year); //
-		
-		byyear->nData = (Int_t) _data.data.size();
-
-		Double_t Temp[byyear->nData];
-	
-		for(Int_t i = 0; i < byyear->nData; i++){
-		Temp[i] = _data.data[i].get_temp();
-		TempData* TD = new((*dataArray)[i]) TempData();
-		TD->temp = Temp[i];
-		}
-	tree->Fill();
+	// fill the histogram with average monthly temperatures
+	for (unsigned i = 0; i < year.size(); i++ ){
+		WeatherDataVec A = Monthly.get_by_year(year[i]); 
+		h1->Fill(A.avgtemp());
 	}
-	file->Write();
-	file->Close();
-}
 
+	TCanvas *c1 = new TCanvas("c1","Monthly temperatures distribution",250,10,1200,600);
 
-void Analyse_Monthly::Temp_PerMonth() const{
-	//open the root file and get the tree
-	TFile* file = TFile::Open("monthdata.root");
-	TTree* tree = (TTree*)file->Get("tree");
-	Year* byyear = 0;
-	TClonesArray* dataArray = 0;
-	tree->SetBranchAddress("byyear", &byyear);
-	tree->SetBranchAddress("data", &dataArray);
-	
-	TCanvas *c2 = new TCanvas("c2","Monthly temperatures distribution",250,10,1200,600);
-	TH1D* h1 = new TH1D("h1", "Monthly temperatures distribution; Celsius; Counts", 150, -20, 30);
-	
-	// read data from tree
-	const Int_t nYears = tree->GetEntries();
-	for (Int_t n = 0; n < nYears; n++) {
-		tree->GetEntry(n);
-		const Int_t ndata = dataArray->GetEntries();	
-		Double_t TempSum = 0.0;
-		for (Int_t i = 0; i < ndata; i++){
-			TempData* TD = (TempData*)dataArray->At(i);
-			TempSum += TD->temp;
-		}
-		Double_t TempAver = TempSum/ndata;
-		
-		h1->Fill(TempAver);
-	}
-	
 	TF1* fitfcn = new TF1("fitfcn", "gaus", -20, 30); // fitting function
 	h1->Fit("fitfcn"); 
 	h1->SetLineWidth(2);
@@ -99,71 +47,48 @@ void Analyse_Monthly::Temp_PerMonth() const{
 }
 
 
-void Analyse_Monthly::Month_Extreme() const{
-	//open the root file and get the tree
-	TFile* file = TFile::Open("monthdata.root");
-	TTree* tree = (TTree*)file->Get("tree");
-	Year* byyear = 0;
-	TClonesArray* dataArray = 0;
-	tree->SetBranchAddress("byyear", &byyear);
-	tree->SetBranchAddress("data", &dataArray);
+void Analyse_Monthly::Month_Extreme(){
+
+	WeatherDataVec Monthly = _Wdata.get_by_month(_month); // all data of _month from the file all of the years
+	Double_t highest = Monthly.maxtemp(); // the highest temp of _month over all of the year
+	Double_t lowest = Monthly.mintemp(); // the lowest temp of _month over all of the year
 	
-	const Int_t nYears = tree->GetEntries();
-	// x[] storing the year, yH[] storing the highst temperature in a month of a year, 
-	// yC[] storing the lowest temperature in a month of a year, yA[] storing the monthly average temperature of a year
-	Double_t x[nYears], yH[nYears], yC[nYears], yA[nYears];
-	Double_t Highest = 0.0;
-	Double_t Lowest = 0.0;
 	Int_t year_highest = 0;
 	Int_t year_lowest = 0;
-
-	// read data from tree
-	for (Int_t n = 0; n < nYears; n++) {
-		tree->GetEntry(n);
-		x[n] = byyear->year;
-		const Int_t ndata = dataArray->GetEntries();	
-		Double_t HTemp = 0.0;
-		Double_t CTemp = 0.0;
-		Double_t TempSum = 0.0;
-		for (Int_t i = 0; i < ndata; i++) {
-			TempData* TD = (TempData*)dataArray->At(i);
-			TempSum += TD->temp;
-			//find out the highest(HTemp) and lowest(CTemp) temperature in a month in the year byyear->year
-			if (i==0) { 
-				HTemp = TD->temp;
-				CTemp = TD->temp;
-			}
-			else{
-				HTemp = std::max(TD->temp, HTemp);
-				CTemp = std::min(TD->temp, CTemp);
-			}
+	Int_t counter1 = 1; 
+	Int_t counter2 = 1; 
+	// find the corresponding year of the highest/lowest temperature
+	for (unsigned i = 0; i < Monthly.data.size(); i++ ){
+		if ( (highest == Monthly.data[i].get_temp()) && (counter1 == 1) ){
+			year_highest = Monthly.data[i].get_year();
+			counter1--;
 		}
-		Double_t TempAver = TempSum/ndata;
-		yA[n] = TempAver;
-		yH[n] = HTemp;
-		yC[n] = CTemp;
-		//the following is to find out the highest/lowest temperatures over all of the years. 
-		if (n != 0) {
-			Highest = std::max(yH[n], Highest);
-			Lowest = std::min(yC[n], Lowest);
-			if (Highest == yH[n])
-				year_highest = x[n];
-			if (Lowest == yC[n])
-				year_lowest = x[n];
-
-		} else {
-			Highest = yH[0];
-			Lowest = yC[0];
-			year_highest = x[0];
-			year_lowest	= x[0];
+		if ( (lowest == Monthly.data[i].get_temp()) && (counter2 == 1) ){
+			year_lowest = Monthly.data[i].get_year();
+			counter2--;
 		}
+		if ( (counter1 == 0) && (counter2 == 0))
+			break; // stop loop if two years have been found
 	}
-	std::cout << "\nThe highest temperature of this month is " << Highest << " occuring in " << year_highest << std::endl;
-	std::cout << "The lowest temperature of this month is " << Lowest << " occuring in " << year_lowest << std::endl;
+	std::vector<int> year = Monthly.list_years(); // list of the years
+	Int_t nYears = year.size(); // number of the years
+	Double_t x[nYears], yH[nYears], yL[nYears], yA[nYears]; // x storing the years, yH storing the highest, yL storing the lowest, yA storing the average
 	
-	TCanvas *c1 = new TCanvas("c1","Month Extreme Temperature",200,10,1000,600);
+	// store the temperatures in the arrays
+	for (unsigned i = 0; i < year.size(); i++ ){
+		WeatherDataVec A = Monthly.get_by_year(year[i]); 
+		yA[i] = A.avgtemp();
+		yH[i] = A.maxtemp();
+		yL[i] = A.mintemp();
+		x[i] = year[i];
+	}
+
+	std::cout << "\nThe highest temperature of this month is " << highest << " occuring in " << year_highest << std::endl;
+	std::cout << "The lowest temperature of this month is " << lowest << " occuring in " << year_lowest << std::endl;
+	
+	TCanvas *c2 = new TCanvas("c2","Month Extreme Temperature",200,10,1000,600);
 	TGraph* g1 = new TGraph(nYears, x, yH); // figure of the month highest temperature 
-	TGraph* g2 = new TGraph(nYears, x, yC); // figure of the month lowest temperature 
+	TGraph* g2 = new TGraph(nYears, x, yL); // figure of the month lowest temperature 
 	TGraph* g3 = new TGraph(nYears, x, yA); // figure of the month average temperature 
 	TMultiGraph *mg = new TMultiGraph();
 	TF1* fitfcn = new TF1("fitfcn", "pol1", x[0], x[nYears]); // fitting function for average temp
