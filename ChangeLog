@@ -2,6 +2,8 @@
 New functions from WeatherDaraVec.h
 double avgtemp();double maxtemp();double mintemp(); 
 are used to simply the functions in monthly.C. -- QL
+Made global_temperature_regression.C print more information to the console, and display axis titles
+in the plot. Also added header files for both global_temperature_regression.C and avg_periodtemp.C -- CF
 
 03:11:2021
 Added features to Gregorian and WeatherDataVec classes, and compactified the code in corona.C -- DF

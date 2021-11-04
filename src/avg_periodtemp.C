@@ -1,18 +1,4 @@
-#include "WeatherDataLine.h"
-#include "WeatherDataVec.h"
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <iostream>
-#include <sstream>
-
-// ROOT library objects
-#include <TF1.h> // 1d function class
-#include <TH1.h> // 1d histogram classes
-#include <TStyle.h>  // style object
-#include <TMath.h>   // math functions
-#include <TCanvas.h> // canvas object
-#include <TLegend.h>
+#include "avg_periodtemp.h"
 
 
 int convert_dm_to_day(int day, int month){
