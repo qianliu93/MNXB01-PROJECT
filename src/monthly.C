@@ -44,7 +44,9 @@ void Analyse_Monthly::Temp_PerMonth(){
 	l1->AddEntry(fitfcn,"fit","l");
 	l1->AddEntry(h2,"95% CI of fitting function","f");
 	l1->Draw();
-	c1->SaveAs("monthly1.pdf");
+	system("mkdir plot");
+
+	c1->SaveAs("plot/monthly1.pdf");
 }
 
 
@@ -116,5 +118,5 @@ void Analyse_Monthly::Month_Extreme(){
 	l1->AddEntry(fitfcn,"linear fit","l");
 	l1->Draw();
 
-	c2->SaveAs("monthly2.pdf");
+	c2->SaveAs("plot/monthly2.pdf");
 }

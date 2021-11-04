@@ -79,6 +79,6 @@ void temperature_over_two_periods(Int_t year1a, Int_t year1b, Int_t year2a, Int_
 	leg->AddEntry((TObject*)0, diffstring.str().c_str(), "");
 	leg->Draw();
 
-	c->SaveAs("avg_period_temp.pdf");
+	c->SaveAs("plot/avg_period_temp.pdf");
 }
 

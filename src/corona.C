@@ -116,5 +116,5 @@ void Analyse_Corona::Plot_Corona() const{
 	l1->AddEntry(g2,"average temp","l");
 	l1->Draw();
 
-	c3->SaveAs("corona.pdf");
+	c3->SaveAs("plot/corona.pdf");
 }

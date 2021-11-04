@@ -72,7 +72,7 @@ void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata)
         std::cout  << " < 0 suggests a decreasing temperature over time.\n   (predicted difference after 100 years is " << predicted_diff << ")." << std::endl;
     }
 
-	c1->SaveAs("global_temperature_regression.pdf");
+	c1->SaveAs("plot/global_temperature_regression.pdf");
 }
 
 
