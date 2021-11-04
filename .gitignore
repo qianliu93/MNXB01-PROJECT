@@ -5,6 +5,9 @@
 *.d
 *.pcm
 
+#Plots
+plot
+
 #Executable files
 reg
 reg.exe
