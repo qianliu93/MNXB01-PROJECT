@@ -69,7 +69,7 @@ void temperature_over_two_periods(Int_t year1a, Int_t year1b, Int_t year2a, Int_
 	std::stringstream period2string;
 	period2string << year2a << "-" << year2b;
 	std::stringstream diffstring;
-	diffstring << "\\text{Avg. } \\Delta{\\!T} = " << avg_temp_diff;
+	diffstring << "Avg TempDiff=" << avg_temp_diff;
 
 	// create legend
 	auto leg = new TLegend(0.2, 0.15);
