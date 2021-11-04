@@ -1,4 +1,5 @@
 #Files from build
+build
 *.o
 *.s
 *.so
