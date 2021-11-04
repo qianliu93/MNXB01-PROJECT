@@ -117,6 +117,7 @@ int execute_command_list(Command_list command_list) {
 					int b1 = std::stoi(next_command(it));
 					int a2 = std::stoi(next_command(it));
 					int b2 = std::stoi(next_command(it));
+					std::cout << "Running \"temperature over two periods " << a1 << " " << b1 << " " << a2 << " " << b2 << "\"..." << std::endl;
 					temperature_over_two_periods(a1, b1, a2, b2, weather_data);
 				}
 			}
@@ -129,6 +130,7 @@ int execute_command_list(Command_list command_list) {
 			if(t == "regression") {
 				int a1 = std::stoi(next_command(it));
 				int b1 = std::stoi(next_command(it));
+				std::cout << "Running \"global temperature regression " << a1 << " " << b1 << "\"..." << std::endl;
 				global_temperature_regression(a1, b1, weather_data);
 			}
 		}
@@ -136,6 +138,7 @@ int execute_command_list(Command_list command_list) {
 	else if (t == "projectQL") {
 		int a1 = std::stoi(next_command(it));
 		std::string city = next_command(it);
+		std::cout << "Running \"projectQL " << a1 << " " << city << "\"..." << std::endl;
 		projectQL(a1, city, filename);
 	} else {
 		print_help();
