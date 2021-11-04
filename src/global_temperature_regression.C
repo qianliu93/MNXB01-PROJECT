@@ -30,17 +30,18 @@ void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata)
         Gregorian thisday(data[i]);
         y[i] = data[i].get_temp();
         x[i] = ((double)thisday.get_julian_day_number() - (double)start_day)/365. + (double)earliest_date.get_year();
-        if((i % 1000 == 0) || (i % 1000 == 1)){
+        if((i % 3000 == 0) || (i % 3000 == 1)){
             std::cout << "Processing " << thisday.get_year() << "-" << thisday.get_month() << "-" << thisday.get_day() << std::endl;
             std::cout << "   with x[i]=" << x[i] << "  &  y[i]=" << y[i] << std::endl;
         }
     }
     std::cout << "Done." << std::endl;
 
-    TCanvas* c1 = new TCanvas("tempreg", (std::string("Temperature Regression from ") + std::to_string(year1) + " to " + std::to_string(year2)).c_str(),
-                              1500, 600);
+    std::string canvasstring = std::string("Temperature Regression from ") + std::to_string(year1) + " to " + std::to_string(year2);
+    TCanvas* c1 = new TCanvas("tempreg", canvasstring.c_str(), 1500, 600);
 
     TGraph* gr = new TGraph(data_size, x, y);
+    gr->SetTitle( (canvasstring + + ";Year;Temperature").c_str() );
     TF1* increasingsin = new TF1("linearsin","[0]+[1]*x+[2]*sin(6.28318*x-[3])", (double)earliest_date.get_year(), (double)last_date.get_year()+1);
     TFitResultPtr fitptr = gr->Fit(increasingsin, "QNS");
     gr->Draw();
@@ -65,6 +66,22 @@ void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata)
     TGraph* fgr = new TGraph(arrlen, xi, yo);
     fgr->SetLineColor(kRed);
     fgr->Draw("same");
+
+    // "predicted" difference in temperature after 100 years
+    double predicted_diff = 100*p1;
+
+    std::cout << "Fit parameters in function p0+p1*x+p2*sin(2pi*x-p3) were:" << std::endl;
+    std::cout << "   p0=" << p0 << "\n   p1=" << p1 << "\n   p2=" << p2 << "\n   p3=" << p3 << std::endl;
+    if(p1 > 0){
+        std::cout << "In particular, p1=" << p1;
+        std::cout  << " > 0 suggests an increasing temperature over time.\n   (predicted difference after 100 years is " << predicted_diff << ")." << std::endl;
+    }
+    else if(p1 == 0)
+        std::cout << "In particular, p1=0 suggests an unchanging temperature over time." << std::endl;
+    else {
+        std::cout << "In particular, p1=" << p1;
+        std::cout  << " < 0 suggests a decreasing temperature over time.\n   (predicted difference after 100 years is " << predicted_diff << ")." << std::endl;
+    }
 }
 
 
