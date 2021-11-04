@@ -6,8 +6,8 @@ Analyse_Corona::Analyse_Corona(std::string city, std::string filename): _filenam
 
 
 void Analyse_Corona::Plot_Corona() const{
-	std::string fname = "../datasets/Covid Data/Covid_" + _city + ".csv";
-
+	std::string fname = "datasets/Covid Data/Covid_" + _city + ".csv";
+	
 	std::ifstream file;
 	file.open(fname);
 	Int_t veck1[58];
@@ -38,7 +38,7 @@ void Analyse_Corona::Plot_Corona() const{
     }
 
 
-	WeatherDataVec Wdata {"../datasets/" + _filename};
+	WeatherDataVec Wdata {_filename};
     std::cout << "Loaded data (with " << Wdata.data.size() << " entries)." << std::endl;
 
 	Double_t temp[58];

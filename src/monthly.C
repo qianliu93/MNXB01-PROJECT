@@ -1,6 +1,6 @@
 #include "monthly.h"
 
-Analyse_Monthly::Analyse_Monthly(Int_t month, std::string filename): _month{month},  _Wdata{("../datasets/" + filename)} {}
+Analyse_Monthly::Analyse_Monthly(Int_t month, std::string filename): _month{month},  _Wdata{filename} {}
 
 void Analyse_Monthly::Temp_PerMonth(){	
 

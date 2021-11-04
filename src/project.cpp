@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "monthly.h"
 #include "corona.h"
 

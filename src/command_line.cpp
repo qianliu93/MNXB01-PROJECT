@@ -6,6 +6,7 @@
 #include "avg_periodtemp.h"
 #include "global_temperature_regression.h"
 
+#include "project.h"
 #include "command_line.h"
 
 std::string filename;
@@ -110,6 +111,11 @@ int execute_command_list(Command_list command_list) {
 				global_temperature_regression(a1, b1, weather_data);
 			}
 		}
+	}
+	else if (t == "projectQL") {
+		int a1 = std::stoi(next_command(it));
+		std::string city = next_command(it);
+		projectQL(a1, city, filename);
 	}
 	return 1;
 }
