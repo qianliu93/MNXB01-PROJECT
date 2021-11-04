@@ -1,4 +1,7 @@
 04:11:2012
+delete useless header RootClasses.h -- QL
+
+04:11:2012
 New functions from WeatherDaraVec.h
 double avgtemp();double maxtemp();double mintemp(); 
 are used to simply the functions in monthly.C. -- QL
