@@ -1,6 +1,6 @@
 #include "corona.h"
 
-Analyse_Corona::Analyse_Corona(std::string city, std::string filename): _city{city}, _filename{filename}{
+Analyse_Corona::Analyse_Corona(std::string city, std::string filename): _filename{filename}, _city{city} {
 	Plot_Corona();//plot the figure of the relation between the temperature and number of people infected with the COVID-19 when a new object is created.
 }
 
@@ -16,10 +16,10 @@ void Analyse_Corona::Plot_Corona() const{
 
 	Int_t i1 = 0;
 	std::string yearstring, weekstring, numberstring;
-	Int_t year = 0;
-	Int_t week = 0;
+	//Int_t year = 0;
+	//Int_t week = 0;
 	std::string city;
-	Int_t number = 0;
+	//Int_t number = 0;
 	std::string fileline;
 	std::getline(file, fileline); // the first line will be ignored
 
@@ -49,7 +49,7 @@ void Analyse_Corona::Plot_Corona() const{
 	int toYear = 2021;
 	int toMonth = 4;
 	int toDay = 4;
-	int _i = 0; // counter
+	//int _i = 0; // counter
 
 	// equivalent to old code: this has been checked. ("my kind request" - DF) - CF
     // load data between the begining date and end date
@@ -65,7 +65,7 @@ void Analyse_Corona::Plot_Corona() const{
 		counter_date = counter_date + 7;
 	}
     // insert computed data into temp
-	for(int i = 0 ; i < tempvec.size(); i++){
+	for(unsigned int i = 0 ; i < tempvec.size(); i++){
 		temp[i] = tempvec[i];
 	}
 
@@ -115,4 +115,6 @@ void Analyse_Corona::Plot_Corona() const{
 	l1->AddEntry(g1,"number of people infected","f");
 	l1->AddEntry(g2,"average temp","l");
 	l1->Draw();
+
+	c3->SaveAs("corona.pdf");
 }

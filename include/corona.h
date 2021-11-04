@@ -18,6 +18,7 @@
 #include <TGraph.h>
 #include <TCanvas.h>
 #include <TLatex.h>
+#include <TLegend.h>
 #include <TObject.h>
 
 

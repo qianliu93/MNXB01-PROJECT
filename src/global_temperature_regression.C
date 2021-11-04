@@ -1,6 +1,7 @@
 #include "global_temperature_regression.h"
 
 
+
 void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata){
     std::cout << "Slicing raw data..." << std::endl;
     WeatherDataVec data = rawdata.get_between(std::to_string(year1) + "-1-1", std::to_string(year2) + "-12-31");
@@ -10,7 +11,6 @@ void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata)
 	Gregorian earliest_date(data[0]);
     Gregorian last_date(data[data.data.size()-1]);
     int start_day = earliest_date.get_julian_day_number();
-    int end_day = last_date.get_julian_day_number();
 
     int data_size = data.data.size();
     double x[data_size], y[data_size];
@@ -71,6 +71,8 @@ void global_temperature_regression(int year1, int year2, WeatherDataVec rawdata)
         std::cout << "In particular, p1=" << p1;
         std::cout  << " < 0 suggests a decreasing temperature over time.\n   (predicted difference after 100 years is " << predicted_diff << ")." << std::endl;
     }
+
+	c1->SaveAs("global_temperature_regression.pdf");
 }
 
 

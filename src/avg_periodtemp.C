@@ -41,8 +41,7 @@ TH1D* temperature_over_period(const char* name, Int_t yeara, Int_t yearb, Weathe
 	return hist;
 }
 
-void temperature_over_two_periods(Int_t year1a, Int_t year1b, Int_t year2a, Int_t year2b,
-                                  WeatherDataVec data) {
+void temperature_over_two_periods(Int_t year1a, Int_t year1b, Int_t year2a, Int_t year2b, WeatherDataVec data) {
 	std::cout << "Constructing histogram for the first period..." << std::endl;
     auto period1Hist = temperature_over_period("First period", year1a, year1b, data);
 	period1Hist->SetLineColor(kBlue);
@@ -61,7 +60,6 @@ void temperature_over_two_periods(Int_t year1a, Int_t year1b, Int_t year2a, Int_
     std::cout << "The average difference in temperature between the given time periods is: " << avg_temp_diff << std::endl;
 
     auto c = new TCanvas("periodHist", "Average temperatures for two periods", 1000, 800);
-    c = c;
 	period1Hist->Draw();
 	period2Hist->Draw("same");
 

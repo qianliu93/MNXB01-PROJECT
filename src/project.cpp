@@ -1,7 +1,7 @@
 #include "monthly.h"
 #include "corona.h"
 
-void projectQL(Int_t month, std::string city, std::string filename) {
+void projectQL(int month, std::string city, std::string filename) {
 	Analyse_Monthly M(month, filename);
 	M.Temp_PerMonth();
 	M.Month_Extreme();

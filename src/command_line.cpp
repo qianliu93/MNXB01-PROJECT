@@ -4,6 +4,7 @@
 #include <regex>
 #include "WeatherDataVec.h"
 #include "avg_periodtemp.h"
+#include "global_temperature_regression.h"
 
 #include "command_line.h"
 
@@ -84,16 +85,32 @@ int execute_command_list(Command_list command_list) {
 		std::cout << filename << std::endl;
 		return 1;
 	}
-	else if (t == "average") {
+	else if (t == "temperature") {
 		t = next_command(it);
-		if(t == "two") {
-			t = next_command(it);
-			if(t == "periods") {
-				temperature_over_two_periods(std::stoi(next_command(it)), std::stoi(next_command(it)), std::stoi(next_command(it)), std::stoi(next_command(it)), weather_data);
+		if(t == "over") {
+			if(t == "two") {
+				t = next_command(it);
+				if(t == "periods") {
+					int a1 = std::stoi(next_command(it));
+					int b1 = std::stoi(next_command(it));
+					int a2 = std::stoi(next_command(it));
+					int b2 = std::stoi(next_command(it));
+					temperature_over_two_periods(a1, b1, a2, b2, weather_data);
+				}
 			}
 		}
 	}
-	
+	else if (t == "global") {
+		t = next_command(it);
+		if (t == "temperature") {
+			t = next_command(it);
+			if(t == "regression") {
+				int a1 = std::stoi(next_command(it));
+				int b1 = std::stoi(next_command(it));
+				global_temperature_regression(a1, b1, weather_data);
+			}
+		}
+	}
 	return 1;
 }
 
