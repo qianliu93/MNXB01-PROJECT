@@ -110,6 +110,7 @@ int execute_command_list(Command_list command_list) {
 	else if (t == "temperature") {
 		t = next_command(it);
 		if(t == "over") {
+			t = next_command(it);
 			if(t == "two") {
 				t = next_command(it);
 				if(t == "periods") {
