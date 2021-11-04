@@ -3,7 +3,7 @@
 #include <string>
 #include <regex>
 #include "WeatherDataVec.h"
-#include "avg_periodtemp.C"
+#include "avg_periodtemp.h"
 
 #include "command_line.h"
 
@@ -84,9 +84,14 @@ int execute_command_list(Command_list command_list) {
 		std::cout << filename << std::endl;
 		return 1;
 	}
-	else if (t == "avg") {
+	else if (t == "average") {
 		t = next_command(it);
-		temperature_over_two_periods(1990, 1991, 1991, 1992, weather_data);
+		if(t == "two") {
+			t = next_command(it);
+			if(t == "periods") {
+				temperature_over_two_periods(std::stoi(next_command(it)), std::stoi(next_command(it)), std::stoi(next_command(it)), std::stoi(next_command(it)), weather_data);
+			}
+		}
 	}
 	
 	return 1;
