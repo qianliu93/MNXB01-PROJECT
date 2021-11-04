@@ -14,6 +14,8 @@ int main(){
 
     //std::cout << Wdata.data[0].get_temp() << std::endl;
 
+	system("[ ! -d plot/ ] && mkdir plot");
+
     std::cout << "Welcome to the Team G MNXB01 Project Command-Line Interface!" << std::endl;
     std::cout << "Input \"help\" to show available commands."<< std::endl;
 	command_line_loop();
